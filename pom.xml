@@ -97,6 +97,18 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>7.1.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <executions>
@@ -115,7 +127,7 @@
             </goals>
             <configuration>
               <rules>
-                <rule implementation="org.jacoco.maven.RuleConfiguration"></rule>
+                <rule implementation="org.jacoco.maven.RuleConfiguration"/>
               </rules>
             </configuration>
           </execution>
