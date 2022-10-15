@@ -1,5 +1,7 @@
 package com.mycompany.app;
 
+/** var i; */
+
 /** Hello world! */
 public class App {
 
