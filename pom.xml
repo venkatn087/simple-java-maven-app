@@ -15,18 +15,18 @@
           <plugin>
             <groupId>org.owasp</groupId>
             <artifactId>dependency-check-maven</artifactId>
-	    <version>7.1.1</version>
-	    <!-- to suppress the vulnerabilities and fail the build based on CVSS -->
-	    <configuration>
-		    <!--<suppressionFiles>
+            <version>7.1.1</version>
+            <!-- to suppress the vulnerabilities and fail the build based on CVSS -->
+            <configuration>
+              <!--<suppressionFiles>
                   <suppressionFile>suppressions.xml</suppressionFile>
 	  </suppressionFiles> -->
-	  <!--  <failBuildOnCVSS>5</failBuildOnCVSS> -->
-             <formats>ALL</formats>
-	    </configuration>
+              <!--  <failBuildOnCVSS>5</failBuildOnCVSS> -->
+              <formats>ALL</formats>
+            </configuration>
             <executions>
-	      <execution>
-	        <id>owasp-dependency-check</id>		    
+              <execution>
+                <id>owasp-dependency-check</id>
                 <phase>compile</phase>
                 <goals>
                   <goal>check</goal>
@@ -156,6 +156,19 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <!-- https://mvnrepository.com/artifact/org.pitest/pitest-maven -->
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>1.9.8</version>
+        <configuration>
+          <mutationThreshold>70</mutationThreshold>
+          <outputFormats>
+            <outputFormat>XML</outputFormat>
+            <outputFormat>HTML</outputFormat>
+          </outputFormats>
+        </configuration>
       </plugin>
     </plugins>
   </build>
