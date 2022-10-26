@@ -172,11 +172,19 @@
       </plugin>
     </plugins>
   </build>
+  <!--to read the artifacts from nexus-->
   <repositories>
+    <repository>
+      <id>mavegrouprepo</id>
+      <name>mavegrouprepo</name>
+      <url>http://localhost:8081/repository/mavegrouprepo/</url>
+    </repository>
+  </repositories>
+  <distributionManagement>
     <repository>
       <id>mavereleaserepo</id>
       <name>mavereleaserepo</name>
       <url>http://localhost:8081/repository/mavereleaserepo/</url>
     </repository>
-  </repositories>
+ </distributionManagement>
 </project>
