@@ -183,8 +183,8 @@
   <distributionManagement>
     <repository>
       <id>mavereleaserepo</id>
-      <name>mavereleaserepo</name>
-      <url>http://localhost:8081/repository/mavereleaserepo/</url>
+      <name>testtwoexample</name>
+      <url>http://localhost:8081/repository/testtwoexample/</url>
     </repository>
  </distributionManagement>
 </project>
