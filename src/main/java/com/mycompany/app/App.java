@@ -13,6 +13,7 @@ public class App {
   // var tes;
   // var hellopoooo
   private int abc;
+  private int hello;
   private final String message = "Hello World!";
 
   public App() {}
