@@ -50,6 +50,12 @@
       <artifactId>commons-collections</artifactId>
       <version>3.2</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-maven-plugin -->
+    <!--<dependency>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-maven-plugin</artifactId>
+      <version>3.1.0-RC6</version>
+    </dependency> -->
   </dependencies>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -170,8 +176,66 @@
           </outputFormats>
         </configuration>
       </plugin>
+      <!-- <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>4.7.2.1</version>
+      <dependencies> -->
+      <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+      <!--<dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs</artifactId>
+            <version>4.7.3</version>
+	      </dependency>
+        </dependencies>
+	      </plugin> -->
+      <!-- <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.7</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.9</version>
+      </plugin> -->
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>3.1.11</version>
+        <executions>
+          <execution>
+            <id>spotbugs</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>spotbugs</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <htmlOutput>true</htmlOutput>
+          <threshold>Low</threshold>
+          <effort>Max</effort>
+          <debug>true</debug>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+  <!--<plugins>
+     <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>4.7.2.1</version>
+  <dependencies> -->
+  <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+  <!-- <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs</artifactId>
+            <version>4.7.3</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+	  </plugins> -->
   <!--to read the artifacts from nexus-->
   <repositories>
     <repository>
@@ -186,5 +250,14 @@
       <name>testtwoexample</name>
       <url>http://localhost:8081/repository/testtwoexample/</url>
     </repository>
- </distributionManagement>
+  </distributionManagement>
+  <!--  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>3.1.8</version>
+      </plugin>
+    </plugins>
+  </reporting> -->
 </project>
