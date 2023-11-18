@@ -2,6 +2,7 @@ package com.mycompany.app;
 
 // var i;
 // var k;
+//var k;
 
 /** Hello world! */
 public class App {
@@ -13,7 +14,11 @@ public class App {
   // var tes;
   // var hellopoooo
   // var helldfdf
+  // var helloddasd
+  // var iii
+  
   private int abc;
+  
   private int hello;
   private final String message = "Hello World!";
 
@@ -22,6 +27,10 @@ public class App {
   public static void main(String[] args) {
     System.out.println(new App().getMessage());
     // System.out.println(new App().getMessage());
+    System.out.println("hello");
+    // System.out.println("hello");
+                
+      
   }
 
   private final String getMessage() {
