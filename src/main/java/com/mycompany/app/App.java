@@ -27,10 +27,8 @@ public class App {
   public static void main(String[] args) {
     System.out.println(new App().getMessage());
     // System.out.println(new App().getMessage());
-    System.out.println("hello");
     // System.out.println("hello");
-                
-      
+    // System.out.println("hello");           
   }
 
   private final String getMessage() {
