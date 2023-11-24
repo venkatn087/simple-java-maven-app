@@ -252,7 +252,7 @@
       <url>http://localhost:8081/repository/testtwoexample/</url>
     </repository>
   </distributionManagement> -->
-  <distributionManagement>
+  <!-- <distributionManagement>
     <repository>
       <id>mavenreleaserepo</id>
       <name>maven_test_release</name>
@@ -263,7 +263,7 @@
        <name>maven_test_hosted</name>
        <url>http://localhost:8081/repository/maven_test_hosted/</url>
    </snapshotRepository>
-  </distributionManagement>
+  </distributionManagement> -->
 
   <!--  <reporting>
     <plugins>
