@@ -241,8 +241,8 @@
   <repositories>
     <repository>
       <id>mavegrouprepo</id>
-      <name>maven_test_group</name>
-      <url>http://localhost:8081/repository/maven_test_group/</url>
+      <name>maven-grouptest</name>
+      <url>http://localhost:8081/repository/maven-grouptest/</url>
     </repository>
   </repositories>
  <!-- <distributionManagement>
@@ -252,18 +252,18 @@
       <url>http://localhost:8081/repository/testtwoexample/</url>
     </repository>
   </distributionManagement> -->
-  <!-- <distributionManagement>
+  <distributionManagement>
     <repository>
       <id>mavenreleaserepo</id>
-      <name>maven_test_release</name>
-      <url>http://localhost:8081/repository/maven_test_release/</url>
+      <name>maven-releasetest</name>
+      <url>http://localhost:8081/repository/maven-releasetest/</url>
     </repository>
    <snapshotRepository>
        <id>mavensnapshotrepo</id>
-       <name>maven_test_hosted</name>
-       <url>http://localhost:8081/repository/maven_test_hosted/</url>
+       <name>maven-Snapshottest</name>
+       <url>http://localhost:8081/repository/maven-snapshots/</url>
    </snapshotRepository>
-  </distributionManagement> -->
+  </distributionManagement> 
 
   <!--  <reporting>
     <plugins>
