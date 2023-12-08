@@ -1,2 +1,7 @@
-aszfsdfs
-sdfsddf
+FROM ubuntu
+LABLE author=user1
+LABEL email=xyz@gmail.com
+RUN apt-get update
+COPY file1.txt .
+ADD https://github.com/venkatn087/simple-java-maven-app/archive/refs/heads/master.zip .
+RUN echo "hello"
