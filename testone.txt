@@ -1,7 +1,191 @@
-FROM ubuntu
-LABLE author=user1
-LABEL email=xyz@gmail.com
-RUN apt-get update
-COPY file1.txt .
-ADD https://github.com/venkatn087/simple-java-maven-app/archive/refs/heads/master.zip .
-RUN echo "hello"
+how to edit an image? we can't edit an image.but can achieve this
+with help of some process .
+we can create a container for that image, inside the container we can edit/include all our requirements
+or functionalities then we need to convert that container as a new image.
+
+------------------------------------------------------
+how to convert a container into an image?
+------------------------------------------------------
+step1.docker run --d --name mycontainer2 nginx
+step2.docker exec -it containerid /bin/bash    --->
+step3.figlet sun
+step5. agt-get update
+step6 apt-get install figlet
+step7. figlet sun
+ now press ctrl+d (to come out from the running container)
+step8.docker commit -m "test" newimage mycontainer2   (create a new image with input as container)
+step9.docker run -d --name mycontainer3 newimage (created in step8)
+step10.docker exec -it containerid /bin/bash  
+step11.figlet sun
+
+
+set of instructions and argumemt
+========================================================================
+What is a multistage build?
+Multi-stage builds are useful to optimize Dockerfiles while keeping them easy to read and maintain.
+
+With multi-stage builds, we can use multiple FROM statements in the Dockerfile. Each FROM instruction can use a different base, and each of them begins a new stage of the build. We can selectively copy artifacts from one stage to another, leaving behind everything you don’t want in the final image
+
+
+# syntax=docker/dockerfile:1
+
+FROM golang:1.16
+WORKDIR /testone
+RUN go get -d -v golang.org/x/net/html  
+COPY app.go ./
+RUN CGO_ENABLED=0 go build -a -installsuffix cgo -o app .
+
+FROM alpine:latest  
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=0 /testone ./
+CMD ["./app"]
+
+The second FROM instruction starts a new build stage with the alpine:latest image as its base
+The COPY --from=0 line copies just the built artifact from the previous stage into this new stage.
+The Go SDK and any intermediate artifacts are left behind, and not saved in the final image.
+
+
+How to Name the build stages in a multistage dockerfile?
+By default, the stages are not named, and you refer to them by their integer number, starting with 0 for the first FROM instruction. However, you can name your stages, by adding an AS <NAME> to the FROM instruction. This example improves the previous one by naming the stages and using the name in the COPY instruction. This means that even if the instructions in your Dockerfile are re-ordered later, the COPY doesn’t break.
+
+
+# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1
+
+FROM golang:1.16 AS builder
+WORKDIR /test
+RUN go get -d -v golang.org/x/net/html  
+COPY app.go ./
+RUN CGO_ENABLED=0 go build -a -installsuffix cgo -o app .
+
+FROM alpine:latest  
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /test ./
+CMD ["./app"]
+
+
+How to Use a previous stage as a new stage?
+we need to use the FROM instruction..
+We can pick up where a previous stage left off by referring to it when using the FROM directive.
+
+FROM alpine:latest AS builder
+RUN apk --no-cache add build-base
+
+FROM builder AS build1
+COPY source1.cpp source.cpp
+RUN g++ -o /binary source.cpp
+
+FROM builder AS build2
+COPY source2.cpp source.cpp
+RUN g++ -o /binary source.cpp
+
+
+what are all the Differences between legacy builder and BuildKit?
+The legacy Docker Engine builder processes all stages of a Dockerfile leading up to the selected --target. It will build a stage even if the selected target doesn’t depend on that stage.
+
+BuildKit only builds the stages that the target stage depends on.
+
+For example, given the following Dockerfile:
+
+
+# syntax=docker/dockerfile:1
+FROM ubuntu AS base
+RUN echo "base"
+
+FROM base AS stage1
+RUN echo "stage1"
+
+FROM base AS stage2
+RUN echo "stage2"
+
+With BuildKit enabled, building the stage2 target in this Dockerfile means only base and stage2 are processed. There is no dependency on stage1, so it’s skipped.
+
+What is BuildKit?
+BuildKit is an improved backend to replace the legacy builder. It comes with new and much improved functionality for improving your builds’ performance and the reusability of your Dockerfiles. It also introduces support for handling more complex scenarios:
+
+Detect and skip executing unused build stages
+Parallelize building independent build stages
+Incrementally transfer only the changed files in your build context between builds
+Detect and skip transferring unused files in your build context
+Use Dockerfile frontend implementations with many new features
+Avoid side effects with rest of the API (intermediate images and containers)
+Prioritize your build cache for automatic pruning
+
+How to enable the BuildKit?
+To set the BuildKit environment variable when running the docker build command, run:
+DOCKER_BUILDKIT=1 docker build .
+
+
+
+
+======================multistage example 2========================
+
+
+https://github.com/venkatn087/simple-java-maven-app.git
+
+vi Dockerfile
+
+FROM maven:3.6-apline
+FROM openjdk:8-alpine
+
+now manually download the images:
+
+docker pull maven:3.6-alpine
+docker pull openjdk:8-alpine
+
+now look  at the size of the images
+
+docker images | grep maven
+docker images | grep openjdk
+ 
+now downloand the simple maven program into the machine
+
+git clone https://github.com/venkatn087/simple-java-maven-app.git
+
+mv simple-java-maven-app.git app-maven
+
+
+vi Dockerfile
+
+FROM maven:3.6-apline
+
+COPY app-maven /app
+
+WORKDIR /app
+
+RUN mvn package
+
+#FROM openjdk:8-alpine
+
+now build the image ,
+docker build -t app-maven:v1 .
+now see the size is increased..
+
+now go little bit up and get the path of the jar file..
+
+vi Dockerfile
+
+FROM maven:3.6-apline as builder
+
+COPY app-maven /app
+
+WORKDIR /app
+
+RUN mvn package
+
+FROM openjdk:8-alpine
+
+COPY --from=builder /app/target/my-app-1.0-SNAPSHOT.jar /app.jar
+
+CMD java -jar /app.jar
+
+build with version 2
+
+
+now see the iamge size...
+
+
+ 
+
