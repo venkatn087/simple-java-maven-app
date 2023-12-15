@@ -1,3 +1,18 @@
+FROM bussybox
+CMD["sleep"]
+CMD["a"]
+CMD["b"]
+CMD["sh"]
+
+FROM bussybox
+CMD["sh"]
+
+FROM busybox
+ENTRYPOINT["/bin/ping"]   --> this is binary 
+build the image and create a container
+
+
+
 how to edit an image? we can't edit an image.but can achieve this
 with help of some process .
 we can create a container for that image, inside the container we can edit/include all our requirements
