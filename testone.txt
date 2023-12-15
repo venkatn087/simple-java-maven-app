@@ -1,3 +1,12 @@
+FROM ubuntu
+ENTRYPOINT ["sleep"]
+CMD ["300"]
+
+FROM busybox
+ENTRYPOINT ["/bin/ping"]
+CMD ["-c", "20", "google.com"]
+
+
 FROM bussybox
 CMD["sleep"]
 CMD["a"]
