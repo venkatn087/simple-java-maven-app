@@ -211,5 +211,428 @@ build with version 2
 now see the iamge size...
 
 
- 
+
+How to publish all arguments for Exposed ports?
+-----------------------------------------------
+we were discussing about an approach to publishing container port to host
+
+docker container run -dt --name webserver -p 80:80 nginx
+
+this is also referred as publish list as it publishes only list of port specified.
+
+
+there is a second approach to publish all the exposed ports of the container
+docker container run -dt --name webserver -P nginx
+this is also referred as a publish all
+in this approach, all exposed ports are published to random ports of the host.
+
+sudo docker container run -dt --name webserver nginx
+sudo docker ps
+curl 127.0.0.1:80
+
+sudo docker container run -dt -p 8080:80  --name web nginx
+sudo docker ps
+curl 127.0.0.1:8080
+
+sudo docker container run -dt -P --name web01 nginx
+ automatically assign a randon port number ...
+sudo docker ps
+curl 127.0.0.1:32768 here 32768 is the random port number.
+
+
+
+
+
+
+
+
+How to install docker-compose?
+--------------------------------
+Step1 . sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+Step2: sudo chmod +x /usr/local/bin/docker-compose
+Step3: docker-compose --version
+
+Reference document for docker-compose: https://docs.docker.com/compose/
+
+2 webapp 2 db 
+
+
+dockerfile
+we need to build N IMAGE SEPERATELY
+WE NEED to run a cotnainer 
+
+
+
+Example-1:
+------------
+sudo docker run -d --name nginx_con -p 8080:80 nginx:alpine
+
+vi docker-compose.yml
+
+version: '3'
+
+services:
+  web:
+    image: nginx:alpine
+    container_name: nginx_con
+    ports:
+      - "9090:80"
+
+
+
+subbune590@docker:~/dockercompose$ sudo docker-compose up -d
+WARNING: Found orphan containers (mysql) for this project. If you removed or renamed this serv
+ice in your compose file, you can run this command with the --remove-orphans flag to clean it 
+up.
+Pulling web (nginx:alpine)...
+alpine: Pulling from library/nginx
+59bf1c3509f3: Pull complete
+8d6ba530f648: Pull complete
+5288d7ad7a7f: Pull complete
+39e51c61c033: Pull complete
+ee6f71c6f4a8: Pull complete
+f2303c6c8865: Pull complete
+Digest: sha256:da9c94bec1da829ebd52431a84502ec471c8e548ffb2cedbf36260fd9bd1d4d3
+Status: Downloaded newer image for nginx:alpine
+Creating nginx_con ... done
+subbune590@docker:~/dockercompose$ sudo docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS   
+                                               NAMES
+7ab52688ca29   nginx:alpine   "/docker-entrypoint.…"   7 seconds ago   Up 5 seconds   0.0.0.0:
+9090->80/tcp, :::9090->80/tcp                  nginx_con
+28f450b73adc   mysql:5.7      "docker-entrypoint.s…"   6 minutes ago   Up 6 minutes   0.0.0.0:
+3306->3306/tcp, :::3306->3306/tcp, 33060/tcp   mysql
+subbune590@docker:~/dockercompose$ 
+
+
+Example-2:
+-----------------
+
+vi docker-compose.yml    --> create file 1
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    env_file: env.txt
+
+
+vi env.txt 
+MYSQL_ROOT_PASSWORD=12345678
+SHOW=file
+
+subbune590@docker:~/dockercompose$ vi docker-compose.yml 
+subbune590@docker:~/dockercompose$ sudo docker-compose up -d
+Creating network "dockercompose_default" with the default driver
+Pulling db (mysql:5.7)...
+5.7: Pulling from library/mysql
+6552179c3509: Pull complete
+d69aa66e4482: Pull complete
+3b19465b002b: Pull complete
+7b0d0cfe99a1: Pull complete
+9ccd5a5c8987: Pull complete
+2dab00d7d232: Pull complete
+64d3afdccd4a: Pull complete
+6992e58be0f2: Pull complete
+67313986b81d: Pull complete
+7c36a23db0a4: Pull complete
+d34c396e3198: Pull complete
+Digest: sha256:afc453de0d675083ac00d0538521f8a9a67d1cce180d70fab9925ebcc87a0eba
+Status: Downloaded newer image for mysql:5.7
+Creating mysql ... done
+subbune590@docker:~/dockercompose$ sudo docker ps | grep mysql
+28f450b73adc   mysql:5.7   "docker-entrypoint.s…"   14 seconds ago   Up 11 seconds   0.0.0.0:3
+306->3306/tcp, :::3306->3306/tcp, 33060/tcp   mysql
+subbune590@docker:~/dockercompose$ 
+Docker compose example: https://docs.docker.com/compose/gettingstarted/
+
+
+Volumes in Docker-compose:
+-------------------------
+sudo docker-compose -f dockercomposefilename up -d
+
+./public:/usr/share/nginx/html
+vi docker-compose.yml
+version: '3'
+services:
+  web:
+    image: nginx:alpine
+    container_name: nginx_con
+    ports:
+      - "9090:80"
+    volumes:
+      - /usr/share/nginx/html
+
+sudo docker inspect containername ---> to find the anonymous volume..
+Anonymous Volume 
+                Type": "volume",
+                "Name": "1a87a60c4b2a914f6787eec129790afa3d54bf7e6ef520b2c18d4bc8ac99b0ef",
+                "Source": "/var/lib/docker/volumes/1a87a60c4b2a914f6787eec129790afa3d54bf7e6ef520b2c18d4bc8ac99b0ef/_data",
+                "Destination": "/usr/share/nginx/html",
+                "Driver": "local",
+sudo -su root
+cd /var/lib/docker/volumes/1a87a60c4b2a914f6787eec129790afa3d54bf7e6ef520b2c18d4bc8ac99b0ef/_data
+root@docker:/var/lib/docker/volumes/1a87a60c4b2a914f6787eec129790afa3d54bf7e6ef520b2c18d4bc8ac
+99b0ef/_data# ls -ltr
+total 8
+-rw-r--r-- 1 root root 615 Jan 25 15:26 index.html
+-rw-r--r-- 1 root root 497 Jan 25 15:26 50x.html
+vi index.html   --------------> open the file and see the data.
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+
+
+root@docker:/var/lib/docker/volumes/1a87a60c4b2a914f6787eec129790afa3d54bf7e6ef520b2c18d4bc8ac
+99b0ef/_data# exit
+exit
+
+subbune590@docker:~/compose$ sudo docker ps 
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS   
+                                NAMES
+bf60c167d07c   nginx:alpine   "/docker-entrypoint.…"   6 minutes ago   Up 6 minutes   0.0.0.0:
+9090->80/tcp, :::9090->80/tcp   nginx_con
+subbune590@docker:~/compose$ sudo docker exec -it nginx_con /bin/bash
+if i go inside container and if i modify the data , same modification we will see in anonymous volume also.
+sudo docker exec -it containername /bin/sh    
+    
+/ # cd /usr/share/nginx/html
+/usr/share/nginx/html # ls -ltr
+total 8
+-rw-r--r--    1 root     root           615 Jan 25 15:26 index.html
+-rw-r--r--    1 root     root           497 Jan 25 15:26 50x.html
+/usr/share/nginx/html # vi index.html 
+/usr/share/nginx/html # touch file1 file2 file3
+/usr/share/nginx/html # ls -ltr
+total 8
+-rw-r--r--    1 root     root           497 Jan 25 15:26 50x.html
+-rw-r--r--    1 root     root           644 Jan 29 01:46 index.html
+-rw-r--r--    1 root     root             0 Jan 29 01:46 file3
+-rw-r--r--    1 root     root             0 Jan 29 01:46 file2
+-rw-r--r--    1 root     root             0 Jan 29 01:46 file1
+/usr/share/nginx/html # 
+/usr/share/nginx/html # ls -ltr
+total 8
+-rw-r--r--    1 root     root           497 Jan 25 15:26 50x.html
+-rw-r--r--    1 root     root           645 Jan 29 01:43 index.html
+-rw-r--r--    1 root     root             0 Jan 29 01:43 file1.txt
+/usr/share/nginx/html # read escape sequence
+subbune590@docker:~/compose$ 
+
+enter ctrl + p + q  --> to comeout from the running container.
+
+subbune590@docker:~/compose$ sudo -su root
+root@docker:~/compose# cd /var/lib/docker/volumes/1a87a60c4b2a914f6787eec129790afa3d54bf7e6ef5
+20b2c18d4bc8ac99b0ef/_data
+root@docker:/var/lib/docker/volumes/1a87a60c4b2a914f6787eec129790afa3d54bf7e6ef520b2c18d4bc8ac
+99b0ef/_data# 
+root@docker:/var/lib/docker/volumes/1a87a60c4b2a914f6787eec129790afa3d54bf7e6ef520b2c18d4bc8ac
+99b0ef/_data# ls -ltr
+total 8
+-rw-r--r-- 1 root root 497 Jan 25 15:26 50x.html
+-rw-r--r-- 1 root root 644 Jan 29 01:46 index.html
+-rw-r--r-- 1 root root   0 Jan 29 01:46 file3
+-rw-r--r-- 1 root root   0 Jan 29 01:46 file2
+-rw-r--r-- 1 root root   0 Jan 29 01:46 file1
+root@docker:/var/lib/docker/volumes/1a87a60c4b2a914f6787eec129790afa3d54bf7e6ef520b2c18d4bc8ac
+99b0ef/_data#
+
+
+ERROR: Named volume "{'type': 'volume', 'source': 'myd', 'target': '/data', 'volume': {'nocopy
+': True}}" is used in service "web" but no declaration was found in the volumes section.
+
+example:2
+---------------
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    container_name: mysqltest
+    ports:
+      - "3306:3306"
+    env_file: env.txt
+    volumes:
+      - "mysql_volume:/var/lib/mysql"
+volumes:
+  mysql_volume:
+
+example:
+-----------
+docker volume create mysql_volume
+
+example3:
+------------
+version: "3.2"
+services:
+  web:
+    build: dockerfile
+    image: nginx:alpine
+    volumes:
+      - type: volume
+        source: mydata
+        target: /usr/share/nginx/html
+        volume:
+          nocopy: true
+      - type: bind
+        source: ./static
+        target: /opt/app/static
+volumes:
+  mydata:
+----------------------------------
+
+version: '3'
+services:
+  web:
+    container_name: nginx1
+    ports:
+      - "8080:80"
+    volumes:
+      - "vol2:/usr/share/nginx/html"
+    image: nginx
+volumes:
+  vol2:
+
+
+
+
+Network in dockercompose:
+----------------------
+version: '3'
+services:
+  web:
+    image: centos
+    container_name: nginx
+    networks:
+      - test_net
+    tty: true
+  db:
+    image: centos
+    container_name: mysql
+    networks:
+      - test_net
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+    tty: true
+networks:
+  test_net:
+
+docker exec nginx bash -c "ping mysql"
+docker network create test_net
+
+docker exec mysql bash -c "ping nginx"
+
+
+-----------------------------------
+===================================dockdercompose  with build:===============
+
+
+version: '3'
+services:
+  web:
+    image: my_image
+    container_name: test_cont
+    build: .
+
+vi Dockerfile
+FROM nginx
+RUN mkdir /opt/test
+
+docker-compose build 
+
+docker compose will understand the Dockerfile, so no need to specify the dockerfile name in the dockercompose yaml file.
+
+if the Dockerfile name is other than the "Dockerfile" we need to specify externally
+
+version: '3'
+services:
+  web:
+    image: my_image
+    container_name: test_cont
+    build:
+      context: .
+      dockerfile: Dockerfile2
+      
+
+vi Dockerfile2
+FROM nginx
+RUN mkdir /opt/test
+
+
+
+if the Dockerfile name is other than the "Dockerfile" we need to specify externally
+and if the Dockerfile2 is present inside the "build" directory then in the build context we need to specify the directory name...
+
+version: '3'
+services:
+  web:
+    image: my_image
+    container_name: test_cont
+    build:
+      context: build
+      dockerfile: Dockerfile2
+
+vi Dockerfile2
+FROM nginx
+RUN mkdir /opt/test
+
+============================
+
+
+docker-compose logs -f -- >to see the logs
+
+Install wordpress and MYSQL:
+-----------------------------
+https://github.com/ricardoandre97/docker-en-resources
+
+
+
+
+
+version: '3'
+
+services:
+  db:
+    container_name: wp-mysql
+    image: mysql:5.7
+    volumes:
+       - $PWD/data:/var/lib/mysql
+    environment:
+       MYSQL_ROOT_PASSWORD: 12345678
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
+    ports:
+      - "3306:3306"
+    networks:
+      - my_net
+
+  wp:
+    container_name: wp-web
+    volumes:
+      - "$PWD/html:/var/www/html"
+    depends_on:
+      - db
+    image: wordpress
+    ports:
+      - "9091:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    networks:
+      - my_net
+networks:
+  my_net:
+
+
+
 
