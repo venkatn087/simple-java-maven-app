@@ -2,8 +2,8 @@ package com.mycompany.app;
 
 // var i;
 // var k;
-//var k;
-//var l;
+// var k;
+// var l;
 /** Hello world! */
 public class App {
 
@@ -16,9 +16,9 @@ public class App {
   // var helldfdf
   // var helloddasd
   // var iii
-  
+
   private int abc;
-  
+
   private int hello;
   private final String message = "Hello World!";
 
@@ -28,7 +28,7 @@ public class App {
     System.out.println(new App().getMessage());
     // System.out.println(new App().getMessage());
     // System.out.println("hello");
-    // System.out.println("hello");           
+    // System.out.println("hello");
   }
 
   private final String getMessage() {
