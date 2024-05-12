@@ -1,9 +1,9 @@
 package com.mycompany.app;
 
-// var i;
+var i;
+var k;
 // var k;
-// var k;
-// var l;
+var l;
 /** Hello world! */
 public class App {
 
