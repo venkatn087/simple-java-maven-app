@@ -241,13 +241,6 @@
       </plugin>
 	  </plugins> -->
   <!--to read the artifacts from nexus-->
-  <repositories>
-    <repository>
-      <id>mavegrouprepo</id>
-      <name>maven_test_group</name>
-      <url>http://localhost:8081/repository/maven_test_group/</url>
-    </repository>
-  </repositories>
 <distributionManagement>
     <snapshotRepository>
         <id>snapshots</id>
