@@ -7,8 +7,8 @@ package com.mycompany.app;
 /** Hello world! */
 public class App {
 
-  var m;
-  var l;
+  //var m;
+  //var l;
   // var lml;
   // var hetes;
   // var tes;
@@ -27,8 +27,7 @@ public class App {
   public static void main(String[] args) {
     System.out.println(new App().getMessage());
     // System.out.println(new App().getMessage());
-    // System.out.println("hello");
-    // System.out.println("hello");
+     // System.out.println("hello");
   }
 
   private final String getMessage() {
