@@ -6,7 +6,6 @@
   <packaging>jar</packaging>
   <version>2.3</version>
   <name>my-app</name>
-
   <url>http://maven.apache.org</url>
   <profiles>
     <profile>
