@@ -248,18 +248,13 @@
       <url>http://localhost:8081/repository/maven_test_group/</url>
     </repository>
   </repositories>
- <distributionManagement>
-    <repository>
-      <id>mavenreleaserepo</id>
-      <name>maven_test_release</name>
-      <url>http://localhost:8081/repository/maven_test_release/</url>
-    </repository>
-   <snapshotRepository>
-       <id>mavensnapshotrepo</id>
-       <name>maven_test_hosted</name>
-       <url>http://localhost:8081/repository/maven_test_hosted/</url>
-   </snapshotRepository>
-  </distributionManagement>
+<distributionManagement>
+    <snapshotRepository>
+        <id>snapshots</id>
+        <name>ip-10-142-0-13.us-east-2.compute.internal-snapshots</name>
+        <url>http://10.142.0.13:8081/artifactory/maven_snapshot</url>
+    </snapshotRepository>
+</distributionManagement>
 
   <!--  <reporting>
     <plugins>
