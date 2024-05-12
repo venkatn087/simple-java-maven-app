@@ -1,14 +1,14 @@
 package com.mycompany.app;
 
-var i;
-var k;
+//var i;
+//var k;
 // var k;
-var l;
+//var l;
 /** Hello world! */
 public class App {
 
-  // var m;
-  // var l;
+  var m;
+  var l;
   // var lml;
   // var hetes;
   // var tes;
